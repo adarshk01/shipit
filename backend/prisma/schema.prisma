@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User{
+  id        Int @id @default(autoincrement())
+  name      String
+  email     String
+  github    String?
+  createdAt DateTime @default(now())
+  projects  Project[]
+}
+
+enum DeploymentStatus{
+  Ready 
+  Error
+  Building
+  Queued
+  Canceled
+}
+
+model Project{
+  projectId         String @id @default(cuid())
+  projectName       String
+  userId            Int
+  deploymentStatus  DeploymentStatus
+  domainUrl         String
+  githubUrl         String
+  user              User @relation(fields: [userId], references: [id])
+  deployments       Deployment[]
+}
+
+model Deployment{
+  deploymentId      String @id @default(cuid())
+  deploymentStatus  DeploymentStatus
+  commitId          String
+  sourcePath        String
+  outputPath        String
+  projectId         String
+  project           Project @relation(fields: [projectId], references: [projectId])
+  deploymentLogs    DeploymentLog[]
+}
+
+enum DeploymentLogStatus{
+  Completed
+  Error
+  Warning
+}
+
+model DeploymentLog{
+  logId         String @id @default(cuid())
+  logMessage    String
+  errorMessage  String
+  status        DeploymentLogStatus
+  timestamp     DateTime
+  deploymentId  String
+  deployment    Deployment @relation(fields: [deploymentId], references: [deploymentId])
+}
