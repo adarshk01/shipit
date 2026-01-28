@@ -3,7 +3,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Landingpage } from "./pages/Landingpage";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-
+import { AuthInitializer } from "./components/AuthInitializer";
 function Auth0ProviderWithNavigate({
   children,
 }: {
@@ -21,9 +21,10 @@ function Auth0ProviderWithNavigate({
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: `${import.meta.env.VITE_AUTH0_API_AUDIENCE}`,
+        scope: "openid profile email offline_access",
       }}
       onRedirectCallback={onRedirectCallback}
-      cacheLocation="memory"
+      cacheLocation="localstorage"
       useRefreshTokens={true}
     >
       {children}
@@ -36,6 +37,7 @@ function App() {
     <div className="h-screen bg-[#0e100f]">
       <BrowserRouter>
         <Auth0ProviderWithNavigate>
+          <AuthInitializer />
           <Routes>
             <Route path="/" element={<Landingpage />} />
             <Route path="/dashboard" element={<Dashboard />} />

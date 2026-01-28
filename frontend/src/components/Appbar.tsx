@@ -1,33 +1,38 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
-import { useGitUser, useLoadingState, useReposState } from "../store/store";
+import {
+  useGitUser,
+  useLoadingState,
+  useReposState,
+  useAuthStore,
+} from "../store/store";
 import axios from "axios";
 
 export function Appbar() {
+  // const {
+  //   loginWithRedirect,
+  //   user,
+  //   isLoading,
+  //   getAccessTokenSilently,
+  //   isAuthenticated,
+  // } = useAuth0();
+
   const {
     loginWithRedirect,
-    user,
-    isLoading,
     getAccessTokenSilently,
-    isAuthenticated,
+    logout: auth0Logout,
   } = useAuth0();
 
-  // const [gitUser, setGitUser] = useState({});
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
 
-  const loadingStateSet = useLoadingState((state) => state.loadingStateSet);
-
-  useEffect(() => {
-    loadingStateSet(isLoading);
-  }, [isLoading]);
-
-  const gitUserSet = useGitUser((state) => state.gitUserSet);
   useEffect(() => {
     if (user) {
-      gitUserSet(user);
-      localStorage.setItem("user", user.nickname as string);
+      setUser(user);
     }
   }, [user]);
-
+  console.log(user);
   const repoStateSet = useReposState((state) => state.reposStateSet);
 
   useEffect(() => {
@@ -64,14 +69,14 @@ export function Appbar() {
       console.log(res.data);
     };
 
-    if (!isLoading && isAuthenticated) {
+    if (isAuthenticated) {
       callbackend();
       gitTokenBackend();
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (isAuthenticated) {
       async () => {
         const token = await getAccessTokenSilently({
           authorizationParams: {
@@ -80,7 +85,7 @@ export function Appbar() {
         });
       };
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated]);
 
   return (
     <div className="flex justify-between items-center text-white">
@@ -91,18 +96,35 @@ export function Appbar() {
         <div className="cursor-pointer">Resources</div>
         <div className="cursor-pointer">Pricing</div>
       </div>
-      <div
-        onClick={() => {
-          loginWithRedirect({
-            appState: {
-              returnTo: "/dashboard",
-            },
-          });
-        }}
-        className="bg-white/20 p-1 text-xs px-3 rounded-full cursor-pointer hover:bg-white/30 transition duration-200 ease-in"
-      >
-        Log in
-      </div>
+      {isAuthenticated ? (
+        <div className="flex items-center ">
+          {" "}
+          {user ? (
+            <img
+              src={user.picture}
+              height={32}
+              width={32}
+              alt=""
+              className="rounded-full cursor-pointer "
+            />
+          ) : (
+            ""
+          )}
+        </div>
+      ) : (
+        <div
+          onClick={() => {
+            loginWithRedirect({
+              appState: {
+                returnTo: "/dashboard",
+              },
+            });
+          }}
+          className="bg-white/20 p-1 text-xs px-3 rounded-full cursor-pointer hover:bg-white/30 transition duration-200 ease-in"
+        >
+          Log in
+        </div>
+      )}
     </div>
   );
 }

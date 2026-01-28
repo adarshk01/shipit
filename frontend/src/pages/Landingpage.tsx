@@ -2,12 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { Appbar } from "../components/Appbar";
 import { Hero } from "../components/HeroSection";
 import { PrimaryBtn } from "../components/PrimaryBtn";
-import { useLoadingState } from "../store/store";
 
 export function Landingpage() {
   const navigate = useNavigate();
-  const loadingState = useLoadingState((state) => state.loadingState);
-  // console.log(loadingState);
+
   return (
     <div className="h-screen p-8">
       <Appbar />

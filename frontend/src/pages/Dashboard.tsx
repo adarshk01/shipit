@@ -1,4 +1,4 @@
-import { useGitUser, useReposState } from "../store/store";
+import { useAuthStore, useGitUser, useReposState } from "../store/store";
 
 export function Dashboard() {
   const gitUser = useGitUser((state) => state.user);
@@ -6,6 +6,7 @@ export function Dashboard() {
 
   // console.log(gitUser.identities[0].access_token);
   const repos = useReposState((state) => state.repos);
+  const user = useAuthStore((state) => state.user);
   return (
     <div className="">
       <div className="flex justify-between items-center">
@@ -13,13 +14,13 @@ export function Dashboard() {
           <div>ShipIt🚀</div>
           <div className="text-neutral-700/70 text-lg">/</div>
           <div className="text-md font-semibold">
-            {gitUser.nickname}'s projects
+            {user.nickname}'s projects
           </div>
         </div>
         <div className="flex  items-center">
           <div className="border-2 border-slate-300/50 rounded-full  mr-5">
             <img
-              src={gitUser.picture}
+              src={user.picture}
               height={32}
               width={32}
               alt=""

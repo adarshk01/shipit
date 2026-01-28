@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface GitUserStore {
   user: any;
@@ -46,16 +47,40 @@ export const useReposState = create<repoState>((set) => ({
   },
 }));
 
-// interface toeknStore {
-//   token: any;
-//   tokenStateSet: (newVal: any) => void;
-// }
+//------------------------------------------------------
 
-// export const useTokenState = create<toeknStore>((set) => ({
-//   token: {},
-//   tokenStateSet: (newVal: any) => {
-//     set(() => ({
-//       token: newVal,
-//     }));
-//   },
-// }));
+interface AuthState {
+  user: any | null;
+  isAuthenticated: boolean;
+  // isLoading: boolean;
+
+  setUser: (user: any) => void;
+  clearUser: () => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+
+      setUser: (user) =>
+        set({
+          user,
+          isAuthenticated: true,
+        }),
+
+      clearUser: () =>
+        set({
+          user: null,
+          isAuthenticated: false,
+        }),
+    }),
+    {
+      name: "auth-store",
+      partialize: (state) => ({
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
+  )
+);
