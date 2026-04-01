@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  
 }
 
 model User{
@@ -34,8 +35,9 @@ model Project{
   projectName       String
   userId            Int
   deploymentStatus  DeploymentStatus
-  domainUrl         String
+  domainUrl         String?
   githubUrl         String
+  createdAt         DateTime
   user              User @relation(fields: [userId], references: [id])
   deployments       Deployment[]
 }
@@ -66,3 +68,4 @@ model DeploymentLog{
   deploymentId  String
   deployment    Deployment @relation(fields: [deploymentId], references: [deploymentId])
 }
+ 

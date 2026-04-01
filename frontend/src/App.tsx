@@ -1,14 +1,11 @@
-import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
 import { Landingpage } from "./pages/Landingpage";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { AuthInitializer } from "./components/AuthInitializer";
-function Auth0ProviderWithNavigate({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { Import } from "./components/Import";
+
+function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState?: { returnTo?: string }) => {
@@ -41,6 +38,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Landingpage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/import" element={<Import />} />
           </Routes>
         </Auth0ProviderWithNavigate>
       </BrowserRouter>
