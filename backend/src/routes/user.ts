@@ -2,33 +2,62 @@ import dotenv from "dotenv";
 dotenv.config();
 import { Router } from "express";
 import { checkJwt } from "./middleware.js";
-import { PrismaClient } from "@prisma/client/extension";
+import { prismaClient } from "../db/index.js";
 
 const router = Router();
 
+interface Auth0User {
+  email: string;
+  name: string;
+  nickname?: string;
+}
+
 router.get("/", checkJwt, async (req, res) => {
-  // console.log("✅ Authentication successful");
-  // console.log("User auth data:", req.auth?.sub);
-  // console.log(req.headers.user);
+  let body: Auth0User | null = null;
 
-  const body = req.body;
+  const userQuery = req.query.User;
 
-  // const userExist = await PrismaClient.user.findFirst({
-  //   where: {
-  //     email: body.User.email,
-  //   },
-  // });
-  // if (userExist) {
-  //   return res.json({
-  //     message: "you are authenticated",
-  //     user: req.auth,
-  //   });
-  // }
+  if (typeof userQuery == "string") {
+    body = JSON.parse(userQuery);
+  }
+
+  if (!body) {
+    return res.status(400).json({ message: "Missing user data" });
+  }
+
+  let user = await prismaClient.user.findFirst({
+    where: {
+      email: body.email,
+    },
+  });
+  if (user) {
+    return res.json({
+      message: "you are authenticated",
+      auth: req.auth,
+      user,
+    });
+  }
+  try {
+    user = await prismaClient.user.create({
+      data: {
+        email: body.email,
+        name: body.name,
+        github: body.nickname || null,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
   res.json({
     message: "you are authenticated",
-    user: req.auth,
+    auth: req.auth,
+    user,
   });
 });
 
 export const userRouter = router;
+
+// console.log("✅ Authentication successful");
+// console.log("User auth data:", req.auth?.sub);
+// console.log(req.headers.user);
