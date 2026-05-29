@@ -4,6 +4,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { AuthInitializer } from "./components/AuthInitializer";
 import { Import } from "./components/Import";
+import { Project } from "./pages/Project";
 
 function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -31,7 +32,14 @@ function Auth0ProviderWithNavigate({ children }: { children: React.ReactNode }) 
 
 function App() {
   return (
-    <div className="h-screen bg-[#0e100f]">
+    <div
+      className="h-screen bg-[#011614]"
+      style={{
+        backgroundImage: `radial-gradient(circle at 0.15px 0.15px, rgba(38, 34, 43,0.75) 1.5px, transparent 0)`,
+        backgroundSize: "3.5px 3.5px",
+        backgroundRepeat: "repeat",
+      }}
+    >
       <BrowserRouter>
         <Auth0ProviderWithNavigate>
           <AuthInitializer />
@@ -39,6 +47,7 @@ function App() {
             <Route path="/" element={<Landingpage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/import" element={<Import />} />
+            <Route path="/dashboard/project" element={<Project />} />
           </Routes>
         </Auth0ProviderWithNavigate>
       </BrowserRouter>

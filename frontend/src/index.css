@@ -13,3 +13,11 @@
     border-radius: 10px; /* Rounds the ends of the scrollbar thumb */
   }
 }
+
+html,
+body,
+#root {
+  background-color: #0e100f;
+  margin: 0;
+  padding: 0;
+}
