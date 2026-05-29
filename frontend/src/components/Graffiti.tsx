@@ -79,7 +79,7 @@ export function Graffiti() {
         />
       </svg>
 
-      <svg height={600} width={350} className=" left-[1138px] -scale-x-100 absolute">
+      <svg height={600} width={350} className=" left-284.5 -scale-x-100 absolute">
         <defs>
           <linearGradient id="grad2" x1={"100%"} x2={"50%"} y1={"0%"} y2={"100%"}>
             <stop offset={"60%"} stopColor="#6ee7b7" stopOpacity={0.05} />
@@ -96,7 +96,7 @@ export function Graffiti() {
         />
       </svg>
 
-      <svg height={350} width={350} className="  absolute -top-18 -scale-x-100 left-[1138px] ">
+      <svg height={350} width={350} className="  absolute -top-18 -scale-x-100 left-284.5">
         <defs>
           <linearGradient id="blurart1" x1={"0%"} x2={"0%"} y1={"0%"} y2={"100%"}>
             <stop offset={"10%"} stopColor="#34d399" stopOpacity={0.7} />

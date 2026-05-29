@@ -10,11 +10,11 @@ export function Import() {
   const projectDetail = useProjectDetail((state) => state.projectDetail);
   const clearProjectDetail = useProjectDetail((state) => state.clearProjectDetail);
   const [searchParams] = useSearchParams();
-  const name = searchParams.get("name");
+  // const name = searchParams.get("name");
   const fullName = searchParams.get("fullName");
   const branch = searchParams.get("branch");
-  const project = searchParams.get("project");
-  const [platform, setPlatform] = useState<string>(projectDetail.name);
+  // const project = searchParams.get("project");
+  // const [platform, setPlatform] = useState<string>(projectDetail.name);
   const [envArr, setEnvArr] = useState<number[]>([0]);
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState("0px");
@@ -128,7 +128,9 @@ export function Import() {
           </div>
 
           <div className="mt-3">
-            <div className="text-white text-xs font-semibold z-30">Project Name: {platform}</div>
+            <div className="text-white text-xs font-semibold z-30">
+              Project Name: {projectDetail.name}
+            </div>
             {/* <div className="mt-2 w-[50%]">
               <input
                 type="text"
