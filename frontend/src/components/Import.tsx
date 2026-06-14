@@ -13,6 +13,8 @@ export function Import() {
   // const name = searchParams.get("name");
   const fullName = searchParams.get("fullName");
   const branch = searchParams.get("branch");
+  const [openDir, setOpenDir] = useState(false);
+  const [selectedDir, setSelectedDir] = useState("");
   // const project = searchParams.get("project");
   // const [platform, setPlatform] = useState<string>(projectDetail.name);
   const [envArr, setEnvArr] = useState<number[]>([0]);
@@ -63,12 +65,79 @@ export function Import() {
     }, 400);
   };
 
+  const owner = searchParams.get("owner");
+
+  const paths = useGetPath(projectDetail.name, owner || "");
+
   return (
-    <div className="min-h-screen   flex justify-center items-center bg-neutral-900  ">
-      <div className="relative">
+    <div className={`min-h-screen   flex justify-center items-center bg-neutral-900  relative`}>
+      <div className="relative z-10">
         <div className="absolute h-50 w-70 bg-linear-to-b from-blue-300/15 to-transparent blur-3xl -top-70 left-50 z-30 pointer-events-none"></div>
       </div>
-      <div className="min-h-108 h-fit w-125 bg-[#1c1d20] flex flex-col self-start mt-25 rounded-3xl border-t border-blue-300/30 overflow-hidden relative">
+
+      <div
+        className={`relative flex items-center transition-all duration-150 ease-in-out ${
+          openDir ? "opacity-100 " : "pointer-events-none opacity-0"
+        }`}
+      >
+        <div className="absolute h-80 w-80 left-20 rounded-3xl z-50 border border-white/7  bg-[#1c1d20]  p-3 flex flex-col">
+          <span className="text-white text-lg font-semibold">Root Directory</span>
+          <span className="text-white text-sm mt-2 ">
+            Select the directory containing your source code.
+          </span>
+          <hr className="text-white/10 mt-2 " />
+          <span className="text-white text-sm pt-2 bg-gray-400/10 pb-3 pl-2">
+            <div>
+              <span className="pl-1.5">{projectDetail.name}</span>
+              <span className="text-white/40 pl-1">(root)</span>
+            </div>
+          </span>
+          <hr className="text-white/10 " />
+          <div className="text-white text-sm overflow-y-auto  h-35">
+            {paths.map((item: any) => {
+              return (
+                <div
+                  className="flex items-center gap-2 cursor-pointer hover:bg-white/2 pl-6"
+                  onClick={() => setSelectedDir(item)}
+                >
+                  <div className="h-4 w-4 border border-white rounded-full  flex justify-center items-center">
+                    <div
+                      className={`h-2  w-2 bg-blue-400  rounded-full transition-all duration-150 ease-in-out ${
+                        selectedDir === item ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                      }`}
+                    ></div>
+                  </div>
+                  <div className="py-2 cursor-pointer">{item}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-between px-2">
+            <div
+              onClick={() => {
+                setOpenDir(false);
+              }}
+              className="bg-white/10 hover:bg-white/15 cursor-pointer transition-all duration-300 ease-in-out border border-white/30 text-white text-sm p-1 rounded-lg px-2 font-semibold"
+            >
+              Cancel
+            </div>
+            <div
+              className="bg-white hover:bg-white/85 text-sm p-1 rounded-lg px-2 cursor-pointer transition-all duration-300 ease-in-out font-semibold"
+              onClick={() => {
+                setOpenDir(false);
+              }}
+            >
+              Continue
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`min-h-108 h-fit w-125 bg-[#1c1d20] flex flex-col self-start mt-25 rounded-3xl border-t border-blue-300/30 overflow-hidden relative transition-all duration-150 ease-in-out ${
+          openDir ? "blur-sm" : ""
+        }`}
+      >
         <div className="p-7 ">
           <div className="flex justify-between">
             <div className="font-semibold text-white text-2xl">New Project</div>
@@ -131,17 +200,6 @@ export function Import() {
             <div className="text-white text-xs font-semibold z-30">
               Project Name: {projectDetail.name}
             </div>
-            {/* <div className="mt-2 w-[50%]">
-              <input
-                type="text"
-                placeholder="Enter project name"
-                className="border border-neutral-600/50 rounded-md text-white  p-1.5 w-full  "
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-                value={platform}
-              />
-            </div> */}
           </div>
           <hr className="mt-3 text-white/10 h-0.5" />
           <div>
@@ -197,10 +255,15 @@ export function Import() {
             </div>
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <div className="w-full h-7  bg-gray-400/10 rounded-md text-white px-2.5 border border-white/20 cursor-not-allowed">
-              . /
+            <div className="w-full h-7 text-sm flex items-center bg-gray-400/10 rounded-md text-white px-2.5 border border-white/20 cursor-not-allowed select-none">
+              . / {selectedDir ? selectedDir : ""}
             </div>
-            <div className="bg-gray-950 rounded-md w-fit h-7 text-white  flex items-center text-sm font-semibold px-3 border border-white/20 cursor-pointer ">
+            <div
+              className="bg-gray-950 hover:bg-gray-900 transition-all duration-300 ease-in-out rounded-md w-fit h-7 text-white  flex items-center text-sm font-semibold px-3 border border-white/20 cursor-pointer "
+              onClick={() => {
+                setOpenDir(!openDir);
+              }}
+            >
               Edit
             </div>
           </div>
@@ -314,7 +377,8 @@ export function Import() {
                   fullName: projectDetail.fullName,
                   branch: projectDetail.branch,
                   destinationFolder: projectDetail.destinationFolder,
-                  git: projectDetail.git,
+                  git:
+                    selectedDir !== "" ? projectDetail.git + "/" + selectedDir : projectDetail.git,
                   envVar: envVars,
                 });
                 console.log(res.data);
@@ -370,3 +434,19 @@ export function Import() {
 }
 
 // ${open ? " max-h-125  opacity-100 mt-3" : "max-h-0  opacity-0"}
+
+function useGetPath(projName: string, owner: string) {
+  const [paths, setPaths] = useState([]);
+  useEffect(() => {
+    async function main() {
+      const getPaths = await axios.get(
+        `https://api.github.com/repos/${owner}/${projName}/contents/`
+      );
+
+      const tempPaths = getPaths.data.map((item: any) => item.name);
+      setPaths(tempPaths);
+    }
+    main();
+  }, []);
+  return paths;
+}

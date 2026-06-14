@@ -56,7 +56,7 @@ export function Landingpage() {
                 navigate("/dashboard");
               }}
             >
-              <PrimaryBtn />
+              <PrimaryBtn title="Open App" />
             </div>
             <div className="text-emerald-500/70 bg-green-950/80 p-1 px-2 rounded-full text-xs font-semibold">
               Demo

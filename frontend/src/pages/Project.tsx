@@ -48,7 +48,7 @@ export function Project() {
   }, [readyToGo]);
 
   return (
-    <div>
+    <div className="bg-[#0e100f] min-h-screen">
       <div className="border-b border-white/10  p-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="flex gap-2 items-center text-white text-sm">
