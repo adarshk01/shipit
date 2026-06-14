@@ -38,8 +38,11 @@ model Project{
   domainUrl         String?
   githubUrl         String
   createdAt         DateTime
+  icon              String?
+  branch            String?
   user              User @relation(fields: [userId], references: [id])
   deployments       Deployment[]
+  @@unique([userId, projectName])
 }
 
 model Deployment{
