@@ -2,8 +2,6 @@
 
 A Vercel-inspired deployment platform that automates application builds, deployments, and hosting, enabling developers to ship web applications with minimal operational overhead.
 
-**Live Demo:** [shipit-beta.vercel.app](https://shipit-beta.vercel.app)
-
 ## Overview
 
 ShipIt is a comprehensive full-stack deployment platform designed to streamline the deployment workflow. Connect your repositories, configure build settings, and deploy your applications with a single click. No more complex infrastructure management—just ship it!
